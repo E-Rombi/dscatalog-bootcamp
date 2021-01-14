@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eduardo.dscatalog.dto.ProductDTO;
 import com.eduardo.dscatalog.entities.Product;
+import com.eduardo.dscatalog.repositories.CategoryRepository;
 import com.eduardo.dscatalog.repositories.ProductRepository;
 import com.eduardo.dscatalog.services.exceptions.DatabaseException;
 import com.eduardo.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -22,6 +23,9 @@ public class ProductService {
 	@Autowired
 	private ProductRepository repository;
 	
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
 		Page<Product> list = repository.findAll(pageRequest);
@@ -30,24 +34,24 @@ public class ProductService {
 	
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
-		Product category = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found !"));
-		return new ProductDTO(category, category.getCategories());
+		Product product = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found !"));
+		return new ProductDTO(product, product.getCategories());
 	}
 
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
-		Product category = ProductDTO.convert(dto);
-		category = repository.save(category);
-		return new ProductDTO(category);
+		Product product = ProductDTO.convert(dto, categoryRepository);
+		product = repository.save(product);
+		return new ProductDTO(product);
 	}
 
 	@Transactional
 	public ProductDTO update(Long id, ProductDTO dto) {
 		try {
-			Product category = repository.getOne(id);
-			//category.setName(dto.getName());
-			category = repository.save(category);
-			return new ProductDTO(category);
+			Product product = repository.getOne(id);
+			product = ProductDTO.convert(dto, categoryRepository);
+			product = repository.save(product);
+			return new ProductDTO(product);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found: " + id);
 		}

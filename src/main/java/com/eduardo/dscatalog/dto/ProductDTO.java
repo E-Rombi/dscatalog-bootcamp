@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.eduardo.dscatalog.entities.Category;
 import com.eduardo.dscatalog.entities.Product;
+import com.eduardo.dscatalog.repositories.CategoryRepository;
 
 public class ProductDTO implements Serializable {
 
@@ -104,8 +105,20 @@ public class ProductDTO implements Serializable {
 		this.categories = categories;
 	}
 
-	public static Product convert(ProductDTO dto) {
-		//new Product
-		return null;
+	public static Product convert(ProductDTO dto, CategoryRepository categoryRepository) {
+		Product product = new Product();
+		product.setName(dto.getName()); 
+		product.setDescription(dto.getDescription()); 
+		product.setDate(dto.getDate()); 
+		product.setImgUrl(dto.getImgUrl()); 
+		product.setPrice(dto.getPrice()); 
+		
+		product.getCategories().clear();
+		for (CategoryDTO catDto: dto.getCategories()) {
+			Category category = categoryRepository.getOne(catDto.getId());
+			product.getCategories().add(category);
+		}
+		
+		return product;
 	}
 }
