@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ProductsResponse } from '../../core/types/Product';
+import { makeRequest } from '../../core/utils/request';
 import ProductCard from './components/ProductCard';
 import './styles.scss';
 
 const Catalog = () => {
-
-    const [products, setProducts] = useState([]);
+    const [productsResponse, setProductsResponse] = useState<ProductsResponse>();
 
     useEffect(() => {
-        fetch('http://localhost:3000/products')
-            .then(resp => resp.json())
-            .then(resp => console.log(resp));
+        const params = {
+            page:0,
+            linesPerPage: 30
+        }
+
+        makeRequest({ url: '/products', params })
+            .then(resp => setProductsResponse(resp.data))
+            .catch(error => console.log(error));
 
     }, []);
 
@@ -18,7 +24,13 @@ const Catalog = () => {
         <div className="catalog-container">
             <h1 className="catalog-title">Catálogo de Produtos</h1>
             <div className="catalog-products">
-                <Link to="/products/1"><ProductCard /></Link>
+                {
+                    productsResponse?.content.map( product => (
+                        <Link key={product.id} to={`/products/${product.id}`}>
+                            <ProductCard product={product}/>
+                        </Link>
+                    ))
+                }
             </div>
         </div>
     );
