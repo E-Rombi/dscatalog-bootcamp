@@ -14,8 +14,9 @@ const Routes = () => (
             <Route path="/" exact component={Home} />
             <Route path="/products" exact component={Catalog} />
             <Route path="/products/:productId" component={ProductDetails} />
+            <Redirect from="/admin" to="/admin/products"  exact />
             <Route path="/admin">
-                <Redirect to="/admin/products" />
+                
                 <Admin />
             </Route>
         </Switch>
