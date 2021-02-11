@@ -16,7 +16,6 @@ const Routes = () => (
             <Route path="/products/:productId" component={ProductDetails} />
             <Redirect from="/admin" to="/admin/products"  exact />
             <Route path="/admin">
-                
                 <Admin />
             </Route>
         </Switch>
