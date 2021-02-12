@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eduardo.dscatalog.dto.UserDTO;
 import com.eduardo.dscatalog.dto.UserInsertDTO;
+import com.eduardo.dscatalog.dto.UserUpdateDTO;
 import com.eduardo.dscatalog.entities.User;
 import com.eduardo.dscatalog.repositories.RoleRepository;
 import com.eduardo.dscatalog.repositories.UserRepository;
@@ -45,17 +46,17 @@ public class UserService {
 
 	@Transactional
 	public UserDTO insert(UserInsertDTO dto) {
-		User user = UserDTO.convert(dto, roleRepository);
+		User user = UserDTO.convert(dto, roleRepository, new User());
 		user.setPassword(encoder.encode(dto.getPassword()));
 		user = repository.save(user);
 		return new UserDTO(user);
 	}
 
 	@Transactional
-	public UserDTO update(Long id, UserDTO dto) {
+	public UserDTO update(Long id, UserUpdateDTO dto) {
 		try {
 			User user = repository.getOne(id);
-			user = UserDTO.convert(dto, roleRepository);
+			UserDTO.convert(dto, roleRepository, user);
 			user = repository.save(user);
 			return new UserDTO(user);
 		} catch (EntityNotFoundException e) {
