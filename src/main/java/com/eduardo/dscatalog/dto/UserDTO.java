@@ -82,8 +82,7 @@ public class UserDTO implements Serializable {
 		return roles;
 	}
 
-	public static User convert(UserDTO dto, RoleRepository roleRepository) {
-		User user = new User();
+	public static User convert(UserDTO dto, RoleRepository roleRepository, User user) {
 		user.setFirstName(dto.getFirstName());
 		user.setLastName(dto.getLastName());
 		user.setEmail(dto.getEmail());
