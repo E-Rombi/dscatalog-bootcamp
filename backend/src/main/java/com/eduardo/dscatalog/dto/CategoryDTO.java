@@ -1,10 +1,14 @@
 package com.eduardo.dscatalog.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.eduardo.dscatalog.entities.Category;
 
 public class CategoryDTO {
 
 	private Long id;
+	
+	@NotBlank(message = "Campo obrigatório")
 	private String name;
 	
 	public CategoryDTO() {	}
