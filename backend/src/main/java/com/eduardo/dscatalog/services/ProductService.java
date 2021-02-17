@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eduardo.dscatalog.dto.ProductDTO;
+import com.eduardo.dscatalog.entities.Category;
 import com.eduardo.dscatalog.entities.Product;
 import com.eduardo.dscatalog.repositories.CategoryRepository;
 import com.eduardo.dscatalog.repositories.ProductRepository;
@@ -27,8 +28,10 @@ public class ProductService {
 	private CategoryRepository categoryRepository;
 	
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
-		Page<Product> list = repository.findAll(pageRequest);
+	public Page<ProductDTO> findAllPaged(PageRequest pageRequest, Long categoryId, String name) {
+		Category category = (categoryId == 0) ? null : categoryRepository.getOne(categoryId);
+		
+		Page<Product> list = repository.find(category, name, pageRequest);
 		return list.map(c -> new ProductDTO(c));
 	}
 	
