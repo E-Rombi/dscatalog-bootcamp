@@ -1,5 +1,5 @@
-import { makeRequest } from 'core/utils/request';
 import React, { useState } from 'react';
+import { makeRequest } from 'core/utils/request';
 import BaseForm from '../../BaseForm';
 import './styles.scss';
 
