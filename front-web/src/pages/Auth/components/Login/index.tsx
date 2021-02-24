@@ -1,29 +1,49 @@
 import ButtonIcon from 'core/components/ButtonIcon';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import AuthCard from '../Card';
 import './styles.scss';
 import { useForm } from 'react-hook-form';
+import { makeLogin } from 'core/utils/request';
+import { saveSessionData } from 'core/utils/auth';
 
 type FormData = {
-    email: string;
+    username: string;
     password: string;
 }
 
 const Login = () => {
-
     const { register, handleSubmit} = useForm<FormData>();
+    const [hasError, setHasError] = useState(false);
+    const history = useHistory();
 
     const onSubmit = (data: FormData) => {
-        console.log(data);
+        makeLogin(data)
+            .then(response => {
+                setHasError(false);
+                saveSessionData(response.data);
+                history.push('/admin');
+            })
+            .catch(error => {
+                setHasError(true)
+            });
     }
 
     return (
         <div>
             <AuthCard title="login">
+                {hasError && (
+                    <div className="alert alert-danger mt-5">
+                        Usuário ou Senha inválidos !
+                    </div>
+                )}
                 <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-                   <input type="email" name="email" ref={register} required className="form-control input-base margin-bottom-30" placeholder="Email"/>
-                   <input type="password" name="password" ref={register} required className="form-control input-base" placeholder="Senha"/>
+                   <input type="email" name="username" 
+                          ref={register({required: true})} 
+                          className="form-control input-base margin-bottom-30" placeholder="Email"/>
+                   <input type="password" name="password" 
+                          ref={register({required: true})} 
+                          className="form-control input-base" placeholder="Senha"/>
                    <Link to="/admin/auth/recover" className="login-link-recover">
                        Esqueci a senha ?
                    </Link>
