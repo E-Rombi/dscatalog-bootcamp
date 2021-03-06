@@ -22,6 +22,7 @@ const Form = () => {
     const history = useHistory();
     const { productId } = useParams<ParamsType>();
     const isEditing = productId !== 'create';
+    const formTitle = isEditing ? 'EDITAR PRODUTO' : 'CADASTRAR PRODUTO';
 
     useEffect(() => {
         if (isEditing) {
@@ -40,7 +41,6 @@ const Form = () => {
         makePrivateRequest({url: isEditing ? `/products/${productId}` : '/products' , method: isEditing ? 'PUT' : 'POST', data})
             .then((response => {
                 toast.info('Produto salvo com sucesso !');
-                console.log(response.data.id);
                 history.push('/admin/products');
             }))
             .catch(error => {
@@ -50,14 +50,16 @@ const Form = () => {
 
     return (
         <form action="" onSubmit={handleSubmit(onSubmit)}>
-            <BaseForm title="CADASTRAR PRODUTO">
+            <BaseForm title={formTitle}>
                 <div className="row">
                     <div className="col-6">
                         <div className="margin-bottom-30">
                             <input
                                 ref={register({required: "Campo obrigatório",
                                                minLength: {value: 5, message: 'O campo deve ter no mínimo 5 caracteres'},
-                                               maxLength: {value: 60, message: 'O campo deve ter no máximo 60 caracteres'}})}
+                                               maxLength: {value: 60, message: 'O campo deve ter no máximo 60 caracteres'}
+                                              })
+                                    }
                                 type="text" 
                                 name="name"
                                 className={`form-control input-base ${errors.name && 'is-invalid'}`}   
