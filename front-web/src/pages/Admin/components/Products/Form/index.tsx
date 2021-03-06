@@ -1,29 +1,50 @@
 import BaseForm from '../../BaseForm';
 import './styles.scss';
 import { useForm } from 'react-hook-form';
-import { makePrivateRequest } from 'core/utils/request';
+import { makePrivateRequest, makeRequest } from 'core/utils/request';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 type FormState = {
     name: string;
     price: string;
     description: string;
-    imageUrl: string;
+    imgUrl: string;
+}
+
+type ParamsType = {
+    productId: string;
 }
 
 const Form = () => {
-    const { register, handleSubmit, errors } = useForm<FormState>();
+    const { register, handleSubmit, errors, setValue } = useForm<FormState>();
     const history = useHistory();
+    const { productId } = useParams<ParamsType>();
+    const isEditing = productId !== 'create';
+
+    useEffect(() => {
+        if (isEditing) {
+            makeRequest({ url: `/products/${productId}` })
+            .then(response => {
+                setValue('name', response.data.name);
+                setValue('description', response.data.description);
+                setValue('price', response.data.price);
+                setValue('imgUrl', response.data.imgUrl);
+            });
+        }
+        
+    }, [productId, isEditing, setValue]);
 
     const onSubmit = (data: FormState) => {
-        makePrivateRequest({url: '/products', method:'POST', data})
+        makePrivateRequest({url: isEditing ? `/products/${productId}` : '/products' , method: isEditing ? 'PUT' : 'POST', data})
             .then((response => {
-                toast.info('Produto Cadastrado !');
+                toast.info('Produto salvo com sucesso !');
+                console.log(response.data.id);
                 history.push('/admin/products');
             }))
             .catch(error => {
-                toast.error('Erro ao cadastrar o Produto !');
+                toast.error('Erro ao salvar o produto !');
             });
     }
 
@@ -50,7 +71,7 @@ const Form = () => {
                         </div>
                         <div className="margin-bottom-30">
                             <input 
-                                type="number"
+                                type="text"
                                 ref={register({required: "Campo obrigatório"})}
                                 name="price"
                                 className={`form-control input-base ${errors.price && 'is-invalid'}`}
@@ -66,13 +87,13 @@ const Form = () => {
                             <input
                                 type="text" 
                                 ref={register({required: "Campo obrigatório"})}
-                                name="imageUrl"
-                                className={`form-control input-base ${errors.imageUrl && 'is-invalid'}`}
+                                name="imgUrl"
+                                className={`form-control input-base ${errors.imgUrl && 'is-invalid'}`}
                                 placeholder="Imagem do Produto" 
                             />
-                            {errors.imageUrl && (
+                            {errors.imgUrl && (
                                 <div className="invalid-feedback d-block">
-                                    {errors.imageUrl.message}
+                                    {errors.imgUrl.message}
                                 </div>
                             )}
                         </div>
