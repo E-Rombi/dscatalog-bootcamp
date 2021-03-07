@@ -9,7 +9,7 @@ Sistema de catálogo de produtos.
 Desenvolver uma API utilizando Spring Boot e consumi-la para desenvolver o Front-end Web e Mobile utilizando React e React Native, respectivamente.
 
 
-## Tecnologias Utilizadas
+## Tecnologias Utilizadas - Backend
 - Spring Framework
   - Boot
   - Data JPA
@@ -22,6 +22,11 @@ Desenvolver uma API utilizando Spring Boot e consumi-la para desenvolver o Front
 - Amazon S3
 - Docker
 - Swagger
+
+## Tecnologias Utilizadas - Frontend
+- React
+- Sass
+- Typescript
 
 ## Futuro
 Atualmente foi implementado o básico para realização do deploy, será implementado todo o CRUD de categorias, usuários e recuperação de senha.
