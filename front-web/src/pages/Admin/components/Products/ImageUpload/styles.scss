@@ -27,7 +27,7 @@
     .upload-progress-container {
         position: absolute;
         bottom: 10px;
-        left: 37px;
+        left: 28px;
         height: 10px;
         background: #e1e1e1;
         width: 175px;
@@ -40,4 +40,8 @@
         height: 10px;
     }
 
+    .uploaded-image {
+        width: 200px;
+        height: 200px;
+    }
 }

@@ -15,7 +15,6 @@ export type FormState = {
     price: string;
     description: string;
     categories: Category[];
-    imgUrl: string;
 }
 
 type ParamsType = {
@@ -28,6 +27,8 @@ const Form = () => {
     const { productId } = useParams<ParamsType>();
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [urlImage, setUrlImage] = useState('');
+    const [productImgUrl, setProductImgUrl] = useState('');
     const isEditing = productId !== 'create';
     const formTitle = isEditing ? 'EDITAR PRODUTO' : 'CADASTRAR PRODUTO';
 
@@ -38,8 +39,8 @@ const Form = () => {
                 setValue('name', response.data.name);
                 setValue('description', response.data.description);
                 setValue('price', response.data.price);
-                setValue('imgUrl', response.data.imgUrl);
                 setValue('categories', response.data.categories);
+                setProductImgUrl(response.data.imgUrl);
             });
         }
         
@@ -53,15 +54,26 @@ const Form = () => {
             .finally(() => setIsLoadingCategories(false));
     }, []);
 
+
     const onSubmit = (data: FormState) => {
-        makePrivateRequest({url: isEditing ? `/products/${productId}` : '/products' , method: isEditing ? 'PUT' : 'POST', data})
+        data.price  = data.price.replace(',', '.');
+
+        const payload = {
+            ...data,
+            imgUrl: urlImage
+        }
+        makePrivateRequest({url: isEditing ? `/products/${productId}` : '/products' , method: isEditing ? 'PUT' : 'POST', data: payload})
             .then((response => {
-                toast.info('Produto salvo com sucesso !');
+                toast('Produto salvo com sucesso !');
                 history.push('/admin/products');
             }))
             .catch(error => {
                 toast.error('Erro ao salvar o produto !');
             });
+    }
+
+    const onUploadSuccess = (imgUrl: string) => {
+        setUrlImage(imgUrl);
     }
 
     return (
@@ -118,7 +130,9 @@ const Form = () => {
                             )}
                         </div>
                         <div className="margin-bottom-30">
-                            <ImageUpload />
+                            <ImageUpload 
+                                onUploadSuccess={onUploadSuccess} 
+                                productImageUrl={productImgUrl} />
                         </div>
 
                     </div>

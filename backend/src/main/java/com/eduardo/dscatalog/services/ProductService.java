@@ -40,8 +40,9 @@ public class ProductService {
 	public Page<ProductDTO> findAllPaged(PageRequest pageRequest, Long categoryId, String name) {
 		List<Category> categories = (categoryId == 0) ? null : Arrays.asList(categoryRepository.getOne(categoryId));
 		
-		Page<Product> list = repository.find(categories, name, pageRequest);
-		return list.map(c -> new ProductDTO(c));
+		Page<Product> page = repository.find(categories, name, pageRequest);
+		repository.find(page.toList());
+		return page.map(c -> new ProductDTO(c, c.getCategories()));
 	}
 	
 	@Transactional(readOnly = true)
@@ -61,7 +62,7 @@ public class ProductService {
 	public ProductDTO update(Long id, ProductDTO dto) {
 		try {
 			Product product = repository.getOne(id);
-			product = ProductDTO.convert(dto, categoryRepository);
+			product = ProductDTO.convert(dto, categoryRepository, id);
 			product = repository.save(product);
 			return new ProductDTO(product);
 		} catch (EntityNotFoundException e) {

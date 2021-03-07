@@ -135,4 +135,10 @@ public class ProductDTO implements Serializable {
 		
 		return product;
 	}
+	
+	public static Product convert(ProductDTO dto, CategoryRepository categoryRepository, Long id) {
+		Product product = convert(dto, categoryRepository);
+		product.setId(id);
+		return product;
+	}
 }

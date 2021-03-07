@@ -46,7 +46,7 @@ const List = () => {
         if (confirm) {
             makePrivateRequest({url: `/products/${productId}`, method: 'DELETE'})
                 .then((response => {
-                    toast.info('Produto removido com sucesso !');
+                    toast('Produto removido com sucesso !');
                     getProducts();
                 }))
                 .catch(error => {

@@ -4,8 +4,15 @@ import {ReactComponent as ImagePlaceHolder} from 'core/assets/images/upload-plac
 import { makePrivateRequest } from 'core/utils/request';
 import { toast } from 'react-toastify';
 
-const ImageUpload = () => {
+type Props = {
+    onUploadSuccess: (imgUrl: string) => void;
+    productImageUrl: string;
+}
+
+const ImageUpload = ({onUploadSuccess, productImageUrl}: Props) => {
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [urlImage, setUrlImage] = useState('');
+    const imgUrl = urlImage || productImageUrl;
 
 
     const onUploadProgress = (progressEvent: ProgressEvent) => {
@@ -25,7 +32,9 @@ const ImageUpload = () => {
             onUploadProgress
         })
             .then(response => {
-                toast('Imagem enviada !')
+                toast('Imagem enviada !');
+                setUrlImage(response.data.uri);
+                onUploadSuccess(response.data.uri);
             })
             .catch(error => {
                 toast.error('Ocorreu um erro ao enviar imagem !')
@@ -53,15 +62,30 @@ const ImageUpload = () => {
                     A imagem deve ser  JPG ou PNG e não deve ultrapassar <strong>5 MB</strong>.
                 </small>
             </div>
-            <div className="col-6 text-center upload-placeholder">
-                <ImagePlaceHolder />
-                <div className="upload-progress-container">
-                    <div 
-                        className="upload-progress" 
-                        style={{width: `${uploadProgress}%`}}>
-                        
-                    </div>
-                </div>
+            <div className="col-6 upload-placeholder">
+                {
+                    uploadProgress > 0 && (
+                        <>
+                            <ImagePlaceHolder />
+                            <div className="upload-progress-container">
+                                <div 
+                                    className="upload-progress" 
+                                    style={{width: `${uploadProgress}%`}}>
+                                    
+                                </div>
+                            </div>
+                        </>
+                    )
+                }
+                {
+                    (imgUrl && uploadProgress === 0) && (
+                        <img 
+                        src={imgUrl} 
+                        alt={imgUrl}
+                        className="uploaded-image" />
+                    )
+                }
+                
             </div>
             
         </div>
