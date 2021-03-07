@@ -54,14 +54,14 @@ const Form = () => {
             .finally(() => setIsLoadingCategories(false));
     }, []);
 
-
     const onSubmit = (data: FormState) => {
-        data.price  = data.price.replace(',', '.');
+        data.price = data.price.toString().replace(',', '.');
 
         const payload = {
             ...data,
-            imgUrl: urlImage
+            imgUrl: urlImage || productImgUrl 
         }
+
         makePrivateRequest({url: isEditing ? `/products/${productId}` : '/products' , method: isEditing ? 'PUT' : 'POST', data: payload})
             .then((response => {
                 toast('Produto salvo com sucesso !');

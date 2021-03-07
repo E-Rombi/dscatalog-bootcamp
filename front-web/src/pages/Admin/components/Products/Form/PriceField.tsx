@@ -21,6 +21,7 @@ const PriceField = ({ control, errors }: Props) => (
                 decimalScale={2}
                 intlConfig={{ locale: 'pt-BR', currency: 'BRL' }}
                 onValueChange={onChange}
+                defaultValue={''}
                 />
         ))}
         />
