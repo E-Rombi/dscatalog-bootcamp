@@ -56,24 +56,22 @@ const List = () => {
     }
 
     return (
-        <>
-            <div className="admin-products-list">
-                <button className="btn btn-primary btn-lg" onClick={handleCreate}>ADICIONAR</button>
-                <div className="admin-list-container">
-                    {isLoading ? <ProductCardLoader /> : (
-                            productsResponse?.content.map(product => (
-                                    <Card key={product.id} onRemove={onRemove} product={product} />
-                            ))
+        <div className="admin-products-list">
+            <button className="btn btn-primary btn-lg" onClick={handleCreate}>ADICIONAR</button>
+            <div className="admin-list-container">
+                {isLoading ? <ProductCardLoader /> : (
+                        productsResponse?.content.map(product => (
+                                <Card key={product.id} onRemove={onRemove} product={product} />
+                        ))
 
-                    )}
-                </div>
-                { productsResponse && <Pagination  
-                                            totalPages={productsResponse.totalPages} 
-                                            activePage={activePage}
-                                            onChange={page => setActivePage(page)} />}
-            
+                )}
             </div>
-        </>
+            { productsResponse && <Pagination  
+                                        totalPages={productsResponse.totalPages} 
+                                        activePage={activePage}
+                                        onChange={page => setActivePage(page)} />}
+        
+        </div>
     );
 }
 
