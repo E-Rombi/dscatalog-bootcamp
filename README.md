@@ -29,7 +29,7 @@ Desenvolver uma API utilizando Spring Boot e consumi-la para desenvolver o Front
 - Typescript
 
 ## Futuro
-Atualmente foi implementado o básico para realização do deploy, será implementado todo o CRUD de categorias, usuários e recuperação de senha.
+Atualmente foi implementado o básico para realização do deploy, será implementado todo o CRUD de usuários e recuperação de senha.
 
 ## Links
 
