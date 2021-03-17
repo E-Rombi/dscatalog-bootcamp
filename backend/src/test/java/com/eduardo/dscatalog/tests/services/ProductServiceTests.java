@@ -62,10 +62,7 @@ public class ProductServiceTests {
 				
 		when(repository.findById(existsId))
 			.thenReturn(Optional.of(product));
-		
-		when(repository.findById(nonExistsId))
-			.thenReturn(Optional.empty());
-		
+				
 		when(repository.find(ArgumentMatchers.any(), ArgumentMatchers.anyString(), ArgumentMatchers.any()))
 			.thenReturn(page);
 		
@@ -79,15 +76,23 @@ public class ProductServiceTests {
 			.when(repository).deleteById(nonExistsId);
 		
 		doThrow(DataIntegrityViolationException.class)
-		.when(repository).deleteById(dependentId);
+			.when(repository).deleteById(dependentId);
+		
+		doThrow(ResourceNotFoundException.class)
+			.when(repository).findById(nonExistsId);
+		
+		doThrow(ResourceNotFoundException.class)
+			.when(repository).getOne(nonExistsId);
 	}
 	
 	@Test
 	public void updateShouldThrowResourceNotFoundExceptionWhenIdNotExists() {
 		
 		assertThrows(ResourceNotFoundException.class, () -> {
-			service.findById(nonExistsId);
+			service.update(nonExistsId, dtoUpdate);
 		});
+		
+		verify(repository).getOne(nonExistsId);
 	}
 	
 	@Test
