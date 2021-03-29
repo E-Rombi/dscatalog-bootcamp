@@ -20,6 +20,10 @@
         letter-spacing: -0.015em;
         color: #263238;
     }
+
+    &:hover {
+        transform: scale(1.03);
+    }
 }
 
 
